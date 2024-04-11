@@ -7,18 +7,18 @@ class Game{
     this.generation = 0;
     this.maxGeneration = end;
   }
-  update(){
+  update(cb){
     if(this.generation < this.maxGeneration){
       this.grid = updateGrid(this.grid,this.ROWS,this.COLS);
       this.generation++
     }else{
-      console.log("DONE: "+this.generation);
-      console.log(countGrid(this.grid, this.ROWS, this.COLS))
+      var pop = countGrid(this.grid,this.ROWS,this.COLS);
+      cb(pop, this.generation);
     }
   }
-  start(){
+  start(cb){
     for(var i = 0; i < this.maxGeneration + 1; i++){
-      this.update();
+      this.update(cb);
     }
   }
 }
@@ -27,6 +27,7 @@ class Template {
     this.ROWS = h;
     this.COLS = w;
     this.grid = createGrid(this.ROWS,this.COLS);
+    this.id = Math.random().toString(36).substring(2, 9);
   }
 }
 
