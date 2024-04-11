@@ -3,16 +3,16 @@ const { Worker } = require("worker_threads");
 const { addRecords } = require("./ucsv.js");
 
 
-var numWorkers = 10;
+var numWorkers = 4;
 var records = new Array();
-function runSim(numWorkers,w=100,h=100) {
+function runSim(numWorkers,w=100,h=100,end) {
   return new Promise((resolve, reject)=>{
     const template = new Template(w, h);
     for (var i = 0; i < numWorkers; i++) {
       const worker = new Worker("./worker.js", {
         workerData: {
           template,
-          end: 100,
+          end,
         },
       });
       worker.on("message", (data) => {
@@ -32,6 +32,6 @@ function runSim(numWorkers,w=100,h=100) {
     }
   })
 }
-runSim(numWorkers).then(()=>{
+runSim(100,500,500,50).then(()=>{
   addRecords(records);
 })
